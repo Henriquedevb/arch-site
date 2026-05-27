@@ -152,7 +152,7 @@ const architects = [
     role: "Arquiteta & Estrategista",
     image:
       "/eliene-profile.jpg",
-    bio: "Prazer Elieni,\nSou arquiteta, proprietária e diretora de estratégia da VERSE Arquitetura. Arquiteta com especialização em area comercial.estrategista e apaixonada por criar espaços que fazem sentido, tanto para as pessoas, quanto para os negócios.\n\nÀ frente do desenvolvimento estratégico, transformo ideias em projetos que unem funcionalidade, estética e experiência, sempre com um olhar humano, intencional e estratégico sobre cada detalhe.",
+    bio: "Prazer Elieni, sou arquiteta proprietária e diretora de estratégia da VERSE Arquitetura. Arquiteta com especialização em area comercial.estrategista e apaixonada por criar espaços que fazem sentido, tanto para as pessoas, quanto para os negócios.\n\nÀ frente do desenvolvimento estratégico, transformo ideias em projetos que unem funcionalidade, estética e experiência, sempre com um olhar humano, intencional e estratégico sobre cada detalhe.",
   },
   {
     name: "Bruna",
@@ -497,6 +497,40 @@ export default function VerseArquitetura() {
     margin: "0 auto",
     padding: "100px 32px",
     scrollMarginTop: 110,
+  };
+
+  const contactButtonBase = {
+    width: "100%",
+    maxWidth: 420,
+    padding: "18px 22px",
+    borderRadius: 24,
+    textDecoration: "none",
+    fontSize: 15,
+    fontWeight: 700,
+    display: "inline-flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    transition: "transform 180ms ease, box-shadow 180ms ease",
+  } as const;
+
+  const contactButtonPrimary = {
+    ...contactButtonBase,
+    background: "#1A1208",
+    color: "#fff",
+  };
+
+  const contactButtonSecondary = {
+    ...contactButtonBase,
+    background: "rgba(140, 100, 60, 0.15)",
+    color: "#1A1208",
+  };
+
+  const contactButtonOutline = {
+    ...contactButtonBase,
+    background: "transparent",
+    color: "#1A1208",
+    border: "1px solid rgba(26, 18, 8, 0.08)",
   };
 
   return (
@@ -1082,39 +1116,35 @@ export default function VerseArquitetura() {
                 href="https://wa.me/556191030407"
                 target="_blank"
                 rel="noreferrer"
-                style={{
-                  width: "100%",
-                  maxWidth: 420,
-                  padding: 22,
-                  borderRadius: 24,
-                  background: "#1A1208",
-                  color: "#fff",
-                  textDecoration: "none",
-                  fontSize: 15,
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  justifyContent: "center",
-                }}
+                style={contactButtonPrimary}
               >
+                <img
+                  src="/whatsapp.png"
+                  alt="WhatsApp"
+                  style={{ height: 20, width: "auto", display: "inline-block" }}
+                />
                 Falar no WhatsApp
               </a>
               <a
                 href="mailto:verse.arqui@gmail.com"
-                style={{
-                  width: "100%",
-                  maxWidth: 420,
-                  padding: 22,
-                  borderRadius: 24,
-                  background: "rgba(140, 100, 60, 0.15)",
-                  color: "#1A1208",
-                  textDecoration: "none",
-                  fontSize: 15,
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  justifyContent: "center",
-                }}
+                style={contactButtonSecondary}
               >
+                <img
+                  src="/gmail.png"
+                  alt="E-mail"
+                  style={{ height: 20, width: "auto", display: "inline-block" }}
+                />
                 Enviar e-mail
+              </a>
+              <a
+                href="https://www.instagram.com/verse_arquitetura?igsh=NzBtOWQwYnJxcnpo"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                style={contactButtonOutline}
+              >
+                <img src="/instagram.png" alt="Instagram" style={{ height: 20, width: "auto", display: "inline-block" }} />
+                Instagram
               </a>
             </div>
           </div>
