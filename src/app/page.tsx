@@ -6,34 +6,39 @@ import { motion, useScroll, useTransform } from "motion/react";
 
 const services = [
   {
-    title: "Projeto de Arquitetura Comercial Instagramável",
+    title: "Projeto de arquitetura e engenharia",
     description:
-      "Criamos espaços envolventes que valorizam sua marca, aumentam o fluxo de clientes e geram conteúdo orgânico nas redes.",
+      "Projetos completos de arquitetura e engenharia, desde concepção até documentação técnica, garantindo integração entre estética e execução.",
   },
   {
-    title: "Consultoria de Branding",
+    title: "Projeto de reforma e Interiores",
     description:
-      "Ajustamos sua identidade visual e sua experiência física para que cada ambiente fale com seu público e fortaleça sua presença no mercado.",
+      "Soluções para reformas e design de interiores que transformam espaços existentes em ambientes funcionais e com identidade.",
   },
   {
-    title: "Identidade Visual + Experiência",
+    title: "Verse Express: Seu ambiente em 24hrs",
     description:
-      "Unimos arquitetura, cores e materiais para oferecer projetos que funcionam como vitrines da sua marca dentro do ponto de venda.",
+      "Atendimento rápido e objetivo com propostas e layouts expressos em até 24 horas para decisões ágeis de pequenos projetos.",
+  },
+  {
+    title: "Acompanhamento de obra",
+    description:
+      "Gestão e acompanhamento de obras com controle de cronograma, qualidade e alinhamento com o projeto para entrega conforme combinado.",
   },
 ];
 
 const metrics = [
   {
-    value: "80%",
-    label: "Aumento médio em vendas",
+    value: "+200",
+    label: "Projetos entregues",
   },
   {
-    value: "40K",
-    label: "visualizadores mensais em nosso Pinterest",
+    value: "98%",
+    label: "de satisfação dos clientes.",
   },
   {
-    value: "3x",
-    label: "mais engajamento em redes com projetos instagramáveis",
+    value: "Atendimento em todo Brasil.",
+    label: "",
   },
 ];
 
@@ -147,7 +152,7 @@ const architects = [
     role: "Arquiteta & Estrategista",
     image:
       "/eliene-profile.jpg",
-    bio: "Prazer Elieni,\nSou arquiteta, estrategista e apaixonada por criar espaços que fazem sentido, tanto para as pessoas, quanto para os negócios.\n\nÀ frente do desenvolvimento estratégico da VERSE Arquitetura, transformo ideias em projetos que unem funcionalidade, estética e experiência, sempre com um olhar humano, intencional e estratégico sobre cada detalhe.",
+    bio: "Prazer Elieni,\nSou arquiteta, proprietária e diretora de estratégia da VERSE Arquitetura. Arquiteta com especialização em area comercial.estrategista e apaixonada por criar espaços que fazem sentido, tanto para as pessoas, quanto para os negócios.\n\nÀ frente do desenvolvimento estratégico, transformo ideias em projetos que unem funcionalidade, estética e experiência, sempre com um olhar humano, intencional e estratégico sobre cada detalhe.",
   },
   {
     name: "Bruna",
@@ -534,9 +539,17 @@ export default function VerseArquitetura() {
                   opacity: 0.55,
                   fontWeight: 500,
                   margin: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
                 }}
               >
-                Studio de arquitetura e design
+                <img
+                  src="/logo.png"
+                  alt="Verse logo"
+                  style={{ height: 36, width: "auto", display: "inline-block" }}
+                />
+                
               </motion.p>
 
               <motion.h1
@@ -552,7 +565,7 @@ export default function VerseArquitetura() {
                   maxWidth: 720,
                 }}
               >
-                Espaços que vendem e emocionam, do projeto ao resultado.
+               Não projetamos espaços, projetamos resultados.
               </motion.h1>
 
               <motion.p
@@ -661,7 +674,7 @@ export default function VerseArquitetura() {
                   marginBottom: 24,
                 }}
               >
-                Conheça o Studio que conecta arquitetura, branding e resultados.
+                 Cada projeto, um verso.
               </motion.h2>
 
               <motion.p
@@ -676,8 +689,7 @@ export default function VerseArquitetura() {
                   opacity: 0.72,
                 }}
               >
-                Nosso processo une pesquisa de marca, linguagem sensorial e cuidado com cada
-                detalhe para entregar ambientes que encantam clientes e fortalecem vendas.
+                Conheça nosso escritório:
               </motion.p>
             </div>
 
@@ -1054,8 +1066,7 @@ export default function VerseArquitetura() {
                   margin: "0 auto",
                 }}
               >
-                Converse com nossa equipe para transformar seu espaço em uma experiência
-                memorável. Vamos unir a sua marca a uma arquitetura que gera resultados.
+               Fale conosco e transforme seu sonho em realidade.
               </motion.p>
             </div>
 
