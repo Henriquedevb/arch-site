@@ -23,6 +23,11 @@ export default function Header() {
   });
 
   const scrollTo = (id: string) => {
+    if (id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -69,11 +74,17 @@ export default function Header() {
           <VerseLogo />
         </button>
 
-        <nav style={{ display: "flex", gap: 40 }}>
-          {["Sobre", "Projetos", "Contato"].map((item) => (
+        <nav style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+          {[
+            { label: "Início", id: "top" },
+            { label: "Sobre", id: "sobre" },
+            { label: "Serviços", id: "servicos" },
+            { label: "Portfólio", id: "projetos" },
+            { label: "Contato", id: "contato" },
+          ].map((item) => (
             <button
-              key={item}
-              onClick={() => scrollTo(item.toLowerCase())}
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
               style={{
                 background: "none",
                 border: "none",
@@ -91,7 +102,7 @@ export default function Header() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.55")}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </nav>

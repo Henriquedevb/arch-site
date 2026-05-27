@@ -1,21 +1,160 @@
-"use client";
+﻿"use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Header from "@/Header";
 import { motion, useScroll, useTransform } from "motion/react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+const services = [
+  {
+    title: "Projeto de Arquitetura Comercial Instagramável",
+    description:
+      "Criamos espaços envolventes que valorizam sua marca, aumentam o fluxo de clientes e geram conteúdo orgânico nas redes.",
+  },
+  {
+    title: "Consultoria de Branding",
+    description:
+      "Ajustamos sua identidade visual e sua experiência física para que cada ambiente fale com seu público e fortaleça sua presença no mercado.",
+  },
+  {
+    title: "Identidade Visual + Experiência",
+    description:
+      "Unimos arquitetura, cores e materiais para oferecer projetos que funcionam como vitrines da sua marca dentro do ponto de venda.",
+  },
+];
+
+const metrics = [
+  {
+    value: "80%",
+    label: "Aumento médio em vendas",
+  },
+  {
+    value: "40K",
+    label: "visualizadores mensais em nosso Pinterest",
+  },
+  {
+    value: "3x",
+    label: "mais engajamento em redes com projetos instagramáveis",
+  },
+];
+
+
+const feedbackData = {
+  section: {
+    title: "Avaliação do Serviço",
+    subtitle: "O que nossos clientes dizem sobre nós",
+    total_responses: 12,
+  },
+  ratings: {
+    service_quality: {
+      label: "Qualidade do serviço e soluções desenvolvidas",
+      responses: 12,
+      distribution: {
+        extremely_unsatisfied: { label: "Extremamente insatisfeito", count: 0, percentage: 0 },
+        unsatisfied: { label: "Insatisfeito", count: 0, percentage: 0 },
+        neutral: { label: "Neutro", count: 0, percentage: 0 },
+        satisfied: { label: "Satisfeito", count: 0, percentage: 0 },
+        very_satisfied: { label: "Extremamente satisfeito", count: 12, percentage: 100 },
+      },
+      summary_percentage_positive: 100,
+    },
+    professionalism: {
+      label: "Profissionalismo do processo",
+      responses: 12,
+      distribution: {
+        extremely_unsatisfied: { label: "Extremamente insatisfeito", count: 0, percentage: 0 },
+        unsatisfied: { label: "Insatisfeito", count: 0, percentage: 0 },
+        neutral: { label: "Neutro", count: 0, percentage: 0 },
+        satisfied: { label: "Satisfeito", count: 0, percentage: 0 },
+        very_satisfied: { label: "Extremamente satisfeito", count: 12, percentage: 100 },
+      },
+      summary_percentage_positive: 100,
+    },
+    communication: {
+      label: "Eficácia da comunicação durante o processo",
+      responses: 12,
+      scale: "NPS 0–10",
+      distribution: {
+        detractors_0_1: { label: "Extremamente insatisfeito (0–1)", count: 0, percentage: 0 },
+        detractors_2_4: { label: "Insatisfeito (2–4)", count: 0, percentage: 0 },
+        neutral_5: { label: "Neutro (5)", count: 0, percentage: 0 },
+        satisfied_6_8: { label: "Satisfeito (6–8)", count: 1, percentage: 8.3 },
+        very_satisfied_9_10: { label: "Muito satisfeito (9–10)", count: 11, percentage: 91.7 },
+      },
+      summary_percentage_positive: 100,
+    },
+    deadlines: {
+      label: "Cumprimento de prazos estabelecidos",
+      responses: 12,
+      scale: "NPS 0–10",
+      distribution: {
+        detractors_0_1: { label: "Extremamente insatisfeito (0–1)", count: 0, percentage: 0 },
+        detractors_2_4: { label: "Insatisfeito (2–4)", count: 0, percentage: 0 },
+        neutral_5: { label: "Neutro (5)", count: 0, percentage: 0 },
+        satisfied_6_8: { label: "Satisfeito (6–8)", count: 1, percentage: 8.3 },
+        very_satisfied_9_10: { label: "Muito satisfeito (9–10)", count: 11, percentage: 91.7 },
+      },
+      summary_percentage_positive: 100,
+    },
+    cost_benefit: {
+      label: "Custo benefício investido",
+      responses: 12,
+      distribution: {
+        zero: { label: "Zero custo benefício", count: 0, percentage: 0 },
+        bad: { label: "Mal custo benefício", count: 0, percentage: 0 },
+        good: { label: "Bom custo benefício", count: 0, percentage: 0 },
+        great: { label: "Ótimo custo benefício", count: 3, percentage: 25 },
+        excellent: { label: "Excelente custo benefício", count: 9, percentage: 75 },
+      },
+      summary_percentage_positive: 100,
+    },
+  },
+  overall_stats: {
+    satisfaction_rate: 100,
+    nps_top_box: 91.7,
+    cost_benefit_excellent_rate: 75,
+  },
+  testimonials: [
+    {
+      id: 1,
+      author: null,
+      text: "Desde o início, as meninas foram extremamente atenciosas, cuidadosas e muito profissionais em cada detalhe. Conseguiram entender exatamente o que eu queria e traduziram isso em um projeto lindo, funcional e cheio de identidade.",
+      highlight: "Fidelização é a palavra!",
+      tags: ["acessibilidade", "comunicação", "fidelização"],
+      project_type: "Anônimo",
+    },
+    {
+      id: 2,
+      author: "Nayadna",
+      text: "Quero deixar registrado todo meu agradecimento e admiração pelo trabalho incrível que vocês realizaram no projeto do meu escritório. Agora que está tudo finalizado, posso dizer com toda certeza: ficou perfeito! Vocês são extremamente dedicadas, eficientes e atentas a cada detalhe. Transformaram um sonho em realidade e fizeram parte de um capítulo muito especial da minha trajetória. Só tenho a agradecer por toda atenção, carinho e profissionalismo. Este espaço carrega a essência do que sempre imaginei e vocês foram fundamentais para isso acontecer.",
+      highlight: "Ficou perfeito! Transformaram um sonho em realidade.",
+      tags: ["escritório", "dedicação", "atenção aos detalhes", "sonho realizado"],
+      project_type: "escritório",
+    },
+    {
+      id: 3,
+      author: "Jesus Salon",
+      text: "Gostaria de deixar aqui o meu agradecimento e reconhecimento pelo trabalho incrível que vocês realizaram no projeto do nosso salão. Desde o início, as meninas foram extremamente atenciosas, cuidadosas e muito profissionais em cada detalhe. Conseguiram entender exatamente o que eu queria e traduziram isso em um projeto lindo, funcional e cheio de identidade. O resultado final superou minhas expectativas — o espaço ficou elegante, acolhedor e totalmente alinhado com a proposta do Jesus Salon. Muito obrigada pelo carinho, dedicação e excelência no trabalho de vocês. Foi um prazer contar com essa equipe!",
+      highlight: "Superou minhas expectativas — elegante, acolhedor e cheio de identidade.",
+      tags: ["salão", "identidade", "funcionalidade", "superou expectativas"],
+      project_type: "salão comercial",
+    },
+  ],
+};
 
 const architects = [
   {
-    name: "Ana Paula Ferreira",
-    role: "Arquiteta & Sócia",
-    bio: "Formada pela FAU-USP com especialização em arquitetura residencial contemporânea, Ana Paula traz mais de 12 anos de experiência unindo funcionalidade e estética minimalista. Sua abordagem coloca o cliente no centro de cada projeto.",
+    name: "Elieni",
+    role: "Arquiteta & Estrategista",
+    image:
+      "/eliene-profile.jpg",
+    bio: "Prazer Elieni,\nSou arquiteta, estrategista e apaixonada por criar espaços que fazem sentido, tanto para as pessoas, quanto para os negócios.\n\nÀ frente do desenvolvimento estratégico da VERSE Arquitetura, transformo ideias em projetos que unem funcionalidade, estética e experiência, sempre com um olhar humano, intencional e estratégico sobre cada detalhe.",
   },
   {
-    name: "Marina Costa",
-    role: "Arquiteta & Sócia",
-    bio: "Com mestrado em design sustentável pela UNICAMP, Marina é especialista em espaços que respeitam o meio ambiente sem abrir mão da elegância. Seus projetos são marcados pelo uso inteligente da luz natural e materiais locais.",
+    name: "Bruna",
+    role: "Arquiteta & Diretora Operacional",
+    image:
+      "/bruna-profile.jpg",
+    bio: "Oie, eu sou a Bruna! Sou arquiteta formada pela Unieuro desde 2019 e atuo há 7 anos nas áreas de arquitetura e interiores.\n\nEspecialista em design de interiores, desenvolvo projetos que unem funcionalidade, estética e personalidade, sempre criando espaços autorais, elegantes e acolhedores.\n\nHoje, além de proprietária da VERSE Arquitetura, também atuo como diretora operacional da empresa, acompanhando de perto cada detalhe para garantir experiências bem planejadas e resultados alinhados à essência de cada cliente.",
   },
 ];
 
@@ -52,8 +191,6 @@ const projects = [
   },
 ];
 
-// ─── Scroll Image Reveal ──────────────────────────────────────────────────────
-
 function RevealImage({
   src,
   alt,
@@ -83,15 +220,15 @@ function RevealImage({
   const labelY = useTransform(scrollYProgress, [0.25, 0.45], [16, 0]);
 
   return (
-    <div ref={ref} style={{ marginBottom: 80 }}>
-      <div style={{ overflow: "hidden" }}>
+    <div ref={ref} style={{ marginBottom: 80, width: "100%" }}>
+      <div style={{ overflow: "hidden", borderRadius: 28, boxShadow: "0 32px 80px rgba(26, 18, 8, 0.06)" }}>
         <motion.div style={{ clipPath }}>
           <motion.img
             src={src}
             alt={alt}
             style={{
               width: "100%",
-              height: 560,
+              height: "clamp(320px, 42vw, 560px)",
               objectFit: "cover",
               display: "block",
               scale,
@@ -107,6 +244,8 @@ function RevealImage({
           marginTop: 18,
           opacity: labelOpacity,
           y: labelY,
+          flexWrap: "wrap",
+          gap: 12,
         }}
       >
         <p
@@ -138,62 +277,223 @@ function RevealImage({
   );
 }
 
-// ─── Social Icons ─────────────────────────────────────────────────────────────
-
-function WhatsAppIcon() {
+function ServiceCard({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      style={{ width: 32, height: 32 }}
+    <div
+      style={{
+        background: "#fff",
+        borderRadius: 28,
+        border: "1px solid rgba(26, 18, 8, 0.08)",
+        padding: 32,
+        minHeight: 260,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
     >
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-    </svg>
+      <div>
+        <div
+          style={{
+            width: 40,
+            height: 4,
+            background: "#8C643C",
+            borderRadius: 2,
+            marginBottom: 28,
+          }}
+        />
+        <h3
+          style={{
+            fontFamily: "var(--font-playfair)",
+            fontSize: 24,
+            fontWeight: 400,
+            marginBottom: 18,
+            color: "#1A1208",
+          }}
+        >
+          {title}
+        </h3>
+        <p
+          style={{
+            fontSize: 15,
+            lineHeight: 1.8,
+            opacity: 0.74,
+          }}
+        >
+          {description}
+        </p>
+      </div>
+     
+    </div>
   );
 }
 
-function InstagramIcon() {
+function ResultCard({value, label}: {value: string; label: string}) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      style={{ width: 32, height: 32 }}
+    <div
+      style={{
+        background: "rgba(255, 255, 255, 0.7)",
+        borderRadius: 24,
+        border: "1px solid rgba(26, 18, 8, 0.08)",
+        padding: 28,
+        minHeight: 180,
+      }}
     >
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-    </svg>
+      <p
+        style={{
+          fontFamily: "var(--font-playfair)",
+          fontSize: 40,
+          fontWeight: 400,
+          margin: 0,
+          color: "#1A1208",
+        }}
+      >
+        {value}
+      </p>
+      <p
+        style={{
+          fontSize: 15,
+          opacity: 0.7,
+          lineHeight: 1.8,
+          marginTop: 16,
+          maxWidth: 280,
+        }}
+      >
+        {label}
+      </p>
+    </div>
   );
 }
 
-function FacebookIcon() {
+function FeedbackCard({
+  author,
+  projectType,
+  text,
+  highlight,
+}: {
+  author?: string | null;
+  projectType?: string | null;
+  text: string;
+  highlight?: string | null;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const maxChars = 220;
+  const isLong = text.length > maxChars;
+  const preview = isLong && !expanded ? text.slice(0, maxChars).trimEnd() + "…" : text;
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      style={{ width: 32, height: 32 }}
+    <div
+      style={{
+        background: "#fff",
+        borderRadius: 28,
+        padding: 32,
+        boxShadow: "0 24px 60px rgba(26, 18, 8, 0.08)",
+        minHeight: 260,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
     >
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
+      <div>
+        <p
+          style={{
+            fontSize: 18,
+            lineHeight: 1.9,
+            opacity: 0.85,
+            margin: 0,
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          “{preview}”
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded((s) => !s)}
+            aria-expanded={expanded}
+            style={{
+              marginTop: 12,
+              background: "none",
+              border: "none",
+              color: "#8C643C",
+              cursor: "pointer",
+              fontWeight: 700,
+              padding: 0,
+            }}
+          >
+            {expanded ? "Ler menos" : "Ler mais"}
+          </button>
+        )}
+      </div>
+      <div>
+        <p
+          style={{
+            fontFamily: "var(--font-playfair)",
+            fontSize: 20,
+            fontWeight: 400,
+            margin: "24px 0 8px",
+            color: "#1A1208",
+          }}
+        >
+          {author ?? "Anônimo"}
+        </p>
+        <p
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            opacity: 0.55,
+            margin: 0,
+          }}
+        >
+          {projectType ?? ""}
+        </p>
+      </div>
+    </div>
   );
 }
 
-// ─── Divider ─────────────────────────────────────────────────────────────────
+function ClientBadge({name}: {name: string}) {
+  return (
+    <span
+      style={{
+        padding: "16px 22px",
+        borderRadius: 999,
+        background: "rgba(140, 100, 60, 0.08)",
+        color: "#1A1208",
+        fontSize: 13,
+        fontWeight: 600,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {name}
+    </span>
+  );
+}
 
 function SectionDivider() {
   return (
     <div
       style={{
-        borderTop: "1px solid rgba(140,100,60,0.20)",
+        height: 1,
+        background: "rgba(140, 100, 60, 0.14)",
+        margin: "0 32px",
       }}
     />
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function VerseArquitetura() {
+  const sectionBase = {
+    maxWidth: 1100,
+    margin: "0 auto",
+    padding: "100px 32px",
+    scrollMarginTop: 110,
+  };
+
   return (
     <>
       <GlobalStyles />
@@ -206,54 +506,187 @@ export default function VerseArquitetura() {
           fontFamily: "var(--font-montserrat)",
         }}
       >
-        {/* ── SOBRE ── */}
-        <section id="sobre">
+        <section
+          id="top"
+          style={{
+            minHeight: "calc(100vh - 98px)",
+            padding: "140px 32px 90px",
+            overflow: "hidden",
+          }}
+        >
           <div
             style={{
               maxWidth: 1100,
               margin: "0 auto",
-              padding: "160px 32px 120px",
+              display: "grid",
+              gap: 32,
             }}
           >
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                opacity: 0.4,
-                marginBottom: 20,
-                fontWeight: 500,
-              }}
-            >
-              Sobre
-            </motion.p>
+            <div style={{ maxWidth: 680, display: "grid", gap: 28 }}>
+              <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  opacity: 0.55,
+                  fontWeight: 500,
+                  margin: 0,
+                }}
+              >
+                Studio de arquitetura e design
+              </motion.p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.1 }}
-              style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(36px, 5vw, 62px)",
-                fontWeight: 400,
-                lineHeight: 1.12,
-                marginBottom: 88,
-                maxWidth: 560,
-              }}
-            >
-              Arquitetura que conta histórias
-            </motion.h2>
+              <motion.h1
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(44px, 6vw, 84px)",
+                  fontWeight: 400,
+                  lineHeight: 1.02,
+                  margin: 0,
+                  maxWidth: 720,
+                }}
+              >
+                Espaços que vendem e emocionam, do projeto ao resultado.
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{
+                  fontSize: 18,
+                  lineHeight: 1.8,
+                  maxWidth: 620,
+                  opacity: 0.78,
+                }}
+              >
+                Projetos pensados para a sua marca, combinando arquitetura comercial,
+                identidade visual e espaços instagramáveis que geram mais reconhecimento
+                e vendas.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                style={{ display: "flex", flexWrap: "wrap", gap: 16 }}
+              >
+                <a
+                  href="#projetos"
+                  style={{
+                    padding: "16px 26px",
+                    borderRadius: 999,
+                    background: "#1A1208",
+                    color: "#fff",
+                    textDecoration: "none",
+                    fontSize: 13,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    fontWeight: 700,
+                  }}
+                >
+                  Ver portfólio
+                </a>
+                <a
+                  href="#contato"
+                  style={{
+                    padding: "16px 26px",
+                    borderRadius: 999,
+                    background: "rgba(140, 100, 60, 0.12)",
+                    color: "#1A1208",
+                    textDecoration: "none",
+                    fontSize: 13,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    fontWeight: 700,
+                  }}
+                >
+                  Solicite uma proposta
+                </a>
+              </motion.div>
+            </div>
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: 60,
+                gap: 20,
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              }}
+            >
+              {metrics.map((metric) => (
+                <ResultCard key={metric.label} value={metric.value} label={metric.label} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        <section id="sobre" style={{ ...sectionBase, background: "#fff" }}>
+          <div style={{ display: "grid", gap: 36 }}>
+            <div style={{ maxWidth: 720 }}>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Sobre
+              </motion.p>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 24,
+                }}
+              >
+                Conheça o Studio que conecta arquitetura, branding e resultados.
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{
+                  fontSize: 16,
+                  lineHeight: 1.9,
+                  maxWidth: 680,
+                  opacity: 0.72,
+                }}
+              >
+                Nosso processo une pesquisa de marca, linguagem sensorial e cuidado com cada
+                detalhe para entregar ambientes que encantam clientes e fortalecem vendas.
+              </motion.p>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gap: 32,
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                alignItems: "start",
               }}
             >
               {architects.map((architect, i) => (
@@ -262,48 +695,86 @@ export default function VerseArquitetura() {
                   initial={{ opacity: 0, y: 36 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.15 + i * 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.12 + i * 0.14 }}
+                  style={{
+                    background: "#fff",
+                    borderRadius: 28,
+                    overflow: "hidden",
+                    boxShadow: "0 24px 60px rgba(26, 18, 8, 0.08)",
+                    border: "1px solid rgba(26, 18, 8, 0.08)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "stretch",
+                    minHeight: 560,
+                  }}
                 >
-                  <div
-                    style={{
-                      width: 36,
-                      height: 1,
-                      background: "rgba(140,100,60,0.45)",
-                      marginBottom: 28,
-                    }}
-                  />
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-playfair)",
-                      fontSize: 24,
-                      fontWeight: 400,
-                      marginBottom: 8,
-                    }}
-                  >
-                    {architect.name}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: "0.13em",
-                      textTransform: "uppercase",
-                      opacity: 0.4,
-                      marginBottom: 22,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {architect.role}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: 15,
-                      lineHeight: 1.85,
-                      opacity: 0.65,
-                      maxWidth: 420,
-                    }}
-                  >
-                    {architect.bio}
-                  </p>
+                  <div style={{ width: "100%", minHeight: 360, overflow: "hidden", background: "#f5f0eb" }}>
+                    <img
+                      src={architect.image}
+                      alt={`Foto de ${architect.name}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center center",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                  <div style={{ padding: 32, display: "grid", gap: 18, alignItems: "start" }}>
+                    <div>
+                      <p
+                        style={{
+                          fontSize: 11,
+                          letterSpacing: "0.18em",
+                          textTransform: "uppercase",
+                          color: "#8C643C",
+                          marginBottom: 12,
+                          fontWeight: 700,
+                          textAlign: "left",
+                        }}
+                      >
+                        Sobre a {architect.name}
+                      </p>
+                      <h3
+                        style={{
+                          fontFamily: "var(--font-playfair)",
+                          fontSize: 28,
+                          fontWeight: 400,
+                          margin: 0,
+                          color: "#1A1208",
+                          textAlign: "left",
+                        }}
+                      >
+                        {architect.name}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: 12,
+                          letterSpacing: "0.12em",
+                          textTransform: "uppercase",
+                          opacity: 0.55,
+                          marginTop: 10,
+                          fontWeight: 500,
+                          textAlign: "left",
+                        }}
+                      >
+                        {architect.role}
+                      </p>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: 15,
+                        lineHeight: 1.9,
+                        opacity: 0.78,
+                        whiteSpace: "pre-wrap",
+                        margin: 0,
+                        textAlign: "left",
+                      }}
+                    >
+                      {architect.bio}
+                    </p>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -312,47 +783,97 @@ export default function VerseArquitetura() {
 
         <SectionDivider />
 
-        {/* ── PROJETOS ── */}
-        <section id="projetos">
-          <div
-            style={{
-              maxWidth: 1100,
-              margin: "0 auto",
-              padding: "120px 32px",
-            }}
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                opacity: 0.4,
-                marginBottom: 20,
-                fontWeight: 500,
-              }}
-            >
-              Projetos
-            </motion.p>
+        <section id="servicos" style={sectionBase}>
+          <div style={{ display: "grid", gap: 36 }}>
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Serviços
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 24,
+                }}
+              >
+                Soluções para cada etapa do seu projeto.
+              </motion.h2>
+            </div>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.1 }}
+            <div
               style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(36px, 5vw, 62px)",
-                fontWeight: 400,
-                lineHeight: 1.12,
-                marginBottom: 88,
+                display: "grid",
+                gap: 24,
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
               }}
             >
-              Portfólio
-            </motion.h2>
+              {services.map((service) => (
+                <ServiceCard
+                  key={service.title}
+                  title={service.title}
+                  description={service.description}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        <section id="projetos" style={{ ...sectionBase, background: "#fff" }}>
+          <div style={{ display: "grid", gap: 36 }}>
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Portfólio
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 24,
+                }}
+              >
+                Projetos recentes com presença forte e narrativa visual.
+              </motion.h2>
+            </div>
 
             {projects.map((project) => (
               <RevealImage
@@ -368,136 +889,229 @@ export default function VerseArquitetura() {
 
         <SectionDivider />
 
-        {/* ── CONTATO ── */}
-        <section id="contato">
-          <div
-            style={{
-              maxWidth: 1100,
-              margin: "0 auto",
-              padding: "120px 32px 140px",
-              textAlign: "center",
-            }}
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                opacity: 0.4,
-                marginBottom: 20,
-                fontWeight: 500,
-              }}
-            >
-              Contato
-            </motion.p>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.1 }}
-              style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(36px, 5vw, 62px)",
-                fontWeight: 400,
-                lineHeight: 1.12,
-                marginBottom: 20,
-              }}
-            >
-              Vamos conversar
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              style={{
-                fontSize: 15,
-                opacity: 0.5,
-                lineHeight: 1.8,
-                maxWidth: 380,
-                margin: "0 auto 72px",
-              }}
-            >
-              Entre em contato e conte-nos sobre o seu próximo projeto.
-            </motion.p>
+        <section id="clientes" style={sectionBase}>
+          <div style={{ display: "grid", gap: 36 }}>
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Resultados
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 24,
+                }}
+              >
+                Projetos que geram impacto e confiança.
+              </motion.h2>
+            </div>
 
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: 64,
-                flexWrap: "wrap",
+                display: "grid",
+                gap: 20,
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
               }}
             >
-              {[
-                {
-                  icon: <WhatsAppIcon />,
-                  label: "WhatsApp",
-                  // TODO: substituir pelo número real
-                  href: "https://wa.me/5511999999999",
-                },
-                {
-                  icon: <InstagramIcon />,
-                  label: "Instagram",
-                  // TODO: substituir pelo @ real
-                  href: "https://instagram.com/versearquitetura",
-                },
-                {
-                  icon: <FacebookIcon />,
-                  label: "Facebook",
-                  // TODO: substituir pela página real
-                  href: "https://facebook.com/versearquitetura",
-                },
-              ].map((social, i) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  whileInView={{ opacity: 0.55, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                  whileHover={{ opacity: 1, scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 14,
-                    color: "#1A1208",
-                    textDecoration: "none",
-                  }}
-                >
-                  {social.icon}
-                  <span
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      fontWeight: 500,
-                      fontFamily: "var(--font-montserrat)",
-                    }}
-                  >
-                    {social.label}
-                  </span>
-                </motion.a>
+              {metrics.map((metric) => (
+                <ResultCard key={metric.label} value={metric.value} label={metric.label} />
+              ))}
+            </div>
+
+          
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        <section id="feedbacks" style={{ ...sectionBase }}>
+          <div style={{ display: "grid", gap: 36 }}>
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Feedbacks
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 24,
+                }}
+              >
+                O que nossos parceiros dizem sobre nossos projetos.
+              </motion.h2>
+            </div>
+
+            <div style={{ display: "grid", gap: 20, gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+              <ResultCard value={`${feedbackData.overall_stats.satisfaction_rate}%`} label="Satisfação geral" />
+              <ResultCard value={`${feedbackData.overall_stats.nps_top_box}%`} label="NPS (9–10)" />
+              <ResultCard value={`${feedbackData.overall_stats.cost_benefit_excellent_rate}%`} label="Custo-benefício ótimo/excelente" />
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gap: 24,
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              }}
+            >
+              {feedbackData.testimonials.map((t) => (
+                <FeedbackCard
+                  key={t.id}
+                  author={t.author}
+                  projectType={t.project_type}
+                  text={t.text}
+                  highlight={t.highlight}
+                />
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── FOOTER ── */}
         <SectionDivider />
+
+        <section id="contato" style={sectionBase}>
+          <div style={{ display: "grid", gap: 36, textAlign: "center" }}>
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  opacity: 0.4,
+                  marginBottom: 20,
+                  fontWeight: 500,
+                }}
+              >
+                Contato
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.1 }}
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 400,
+                  lineHeight: 1.12,
+                  marginBottom: 20,
+                }}
+              >
+                Pronto para iniciar o seu projeto?
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{
+                  fontSize: 16,
+                  lineHeight: 1.9,
+                  maxWidth: 620,
+                  opacity: 0.72,
+                  margin: "0 auto",
+                }}
+              >
+                Converse com nossa equipe para transformar seu espaço em uma experiência
+                memorável. Vamos unir a sua marca a uma arquitetura que gera resultados.
+              </motion.p>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gap: 18,
+                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                justifyItems: "center",
+              }}
+            >
+              <a
+                href="https://wa.me/556191030407"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  width: "100%",
+                  maxWidth: 420,
+                  padding: 22,
+                  borderRadius: 24,
+                  background: "#1A1208",
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  justifyContent: "center",
+                }}
+              >
+                Falar no WhatsApp
+              </a>
+              <a
+                href="mailto:verse.arqui@gmail.com"
+                style={{
+                  width: "100%",
+                  maxWidth: 420,
+                  padding: 22,
+                  borderRadius: 24,
+                  background: "rgba(140, 100, 60, 0.15)",
+                  color: "#1A1208",
+                  textDecoration: "none",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  justifyContent: "center",
+                }}
+              >
+                Enviar e-mail
+              </a>
+            </div>
+          </div>
+        </section>
+
         <footer
           style={{
-            padding: "32px",
+            padding: "32px 32px 48px",
             textAlign: "center",
           }}
         >
@@ -505,13 +1119,12 @@ export default function VerseArquitetura() {
             style={{
               fontSize: 11,
               letterSpacing: "0.1em",
-              opacity: 0.2,
+              opacity: 0.4,
               textTransform: "uppercase",
               fontFamily: "var(--font-montserrat)",
             }}
           >
-            © {new Date().getFullYear()} Verse Arquitetura. Todos os direitos
-            reservados.
+            © {new Date().getFullYear()} Verse Arquitetura. Todos os direitos reservados.
           </p>
         </footer>
       </main>
@@ -527,12 +1140,31 @@ function GlobalStyles() {
         margin: 0;
         padding: 0;
       }
+
       html {
         scroll-behavior: smooth;
       }
+
       body {
         background: #F5F0EB;
         overflow-x: hidden;
+        color: #1A1208;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          font-size: 15px;
+        }
       }
     `}</style>
   );
