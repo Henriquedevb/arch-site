@@ -1021,7 +1021,7 @@ export default function VerseArquitetura() {
                   marginBottom: 24,
                 }}
               >
-                O que nossos parceiros dizem sobre nossos projetos.
+                O que nossos clientes dizem sobre nossos projetos.
               </motion.h2>
             </div>
 
